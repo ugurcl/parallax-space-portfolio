@@ -1,34 +1,30 @@
 import { useRef } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { projects } from "../data";
 import "../styles/projects.css";
 
 export default function Projects() {
-  const ref = useRef(null);
   const sectionRef = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   });
 
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.15, 0.8, 1], [0, 1, 1, 0]);
+  const titleY = useTransform(scrollYProgress, [0, 0.15, 0.8, 1], [60, 0, 0, -60]);
+
   return (
     <section className="projects" id="projects" ref={sectionRef}>
       <div className="container">
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
-        >
+        <motion.div style={{ opacity: titleOpacity, y: titleY }}>
           <h2 className="section-title">Projects</h2>
           <p className="section-subtitle">Some things I've built recently</p>
         </motion.div>
 
         <div className="projects-grid">
           {projects.map((project, i) => (
-            <ProjectCard key={project.title} project={project} index={i} inView={inView} scrollProgress={scrollYProgress} />
+            <ProjectCard key={project.title} project={project} index={i} scrollProgress={scrollYProgress} />
           ))}
         </div>
       </div>
@@ -39,16 +35,27 @@ export default function Projects() {
 function ProjectCard({
   project,
   index,
-  inView,
   scrollProgress,
 }: {
   project: (typeof projects)[0];
   index: number;
-  inView: boolean;
   scrollProgress: ReturnType<typeof useScroll>["scrollYProgress"];
 }) {
-  const speeds = [0.15, -0.1, 0.2, -0.15];
-  const y = useTransform(scrollProgress, [0, 1], [speeds[index % 4] * 100, speeds[index % 4] * -100]);
+  const fromLeft = index % 2 === 0;
+  const stagger = index * 0.03;
+
+  const x = useTransform(
+    scrollProgress,
+    [0.05 + stagger, 0.25 + stagger, 0.65 - stagger, 0.9 - stagger],
+    fromLeft ? [-400, 0, 0, -400] : [400, 0, 0, 400]
+  );
+  const opacity = useTransform(
+    scrollProgress,
+    [0.05 + stagger, 0.25 + stagger, 0.65 - stagger, 0.9 - stagger],
+    [0, 1, 1, 0]
+  );
+  const y = useTransform(scrollProgress, [0, 1], [index % 2 === 0 ? 50 : -50, index % 2 === 0 ? -50 : 50]);
+  const rotate = useTransform(scrollProgress, [0, 0.3, 0.7, 1], [fromLeft ? -3 : 3, 0, 0, fromLeft ? -3 : 3]);
 
   const icons = [
     <svg key="0" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" /></svg>,
@@ -58,13 +65,7 @@ function ProjectCard({
   ];
 
   return (
-    <motion.div
-      className="project-card"
-      style={{ y }}
-      initial={{ opacity: 0, y: 60 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.15 }}
-    >
+    <motion.div className="project-card" style={{ x, y, opacity, rotate }}>
       <div className="project-header">
         <div className="project-icon">{icons[index % 4]}</div>
         <div className="project-links">
