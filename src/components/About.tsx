@@ -1,59 +1,57 @@
-import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import ParallaxWrapper from "./ParallaxWrapper";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { aboutText } from "../data";
 import "../styles/about.css";
 
 export default function About() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const sectionRef = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const titleY = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [60, 0, 0, -60]);
+
+  const leftX = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], [-200, 0, 0, -200]);
+  const leftOpacity = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], [0, 1, 1, 0]);
+
+  const rightX = useTransform(scrollYProgress, [0.05, 0.3, 0.7, 0.95], [200, 0, 0, 200]);
+  const rightOpacity = useTransform(scrollYProgress, [0.05, 0.3, 0.7, 0.95], [0, 1, 1, 0]);
+
+  const orbitRotate = useTransform(scrollYProgress, [0, 1], [0, 180]);
+  const statsY = useTransform(scrollYProgress, [0.1, 0.35, 0.65, 0.9], [40, 0, 0, 40]);
 
   return (
-    <section className="about" id="about">
+    <section className="about" id="about" ref={sectionRef}>
       <div className="container">
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
-        >
+        <motion.div style={{ opacity: titleOpacity, y: titleY }}>
           <h2 className="section-title">About Me</h2>
           <p className="section-subtitle">A glimpse into who I am and what drives me</p>
         </motion.div>
 
         <div className="about-grid">
-          <ParallaxWrapper speed={0.3} direction="down">
+          <motion.div style={{ x: leftX, opacity: leftOpacity }}>
             <div className="about-visual">
-              <div className="about-orbit">
+              <motion.div className="about-orbit" style={{ rotate: orbitRotate }}>
                 <div className="about-orbit-dot" />
                 <div className="about-orbit-dot" />
                 <div className="about-orbit-dot" />
                 <div className="about-orbit-inner">
                   <div className="about-orbit-core" />
                 </div>
-              </div>
+              </motion.div>
             </div>
-          </ParallaxWrapper>
+          </motion.div>
 
-          <ParallaxWrapper speed={0.15}>
+          <motion.div style={{ x: rightX, opacity: rightOpacity }}>
             <div className="about-text-block">
               {aboutText.map((text, i) => (
-                <motion.p
-                  key={i}
-                  initial={{ opacity: 0, x: 40 }}
-                  animate={inView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.6, delay: 0.3 + i * 0.2 }}
-                >
-                  {text}
-                </motion.p>
+                <p key={i}>{text}</p>
               ))}
 
-              <motion.div
-                className="about-stats"
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.8 }}
-              >
+              <motion.div className="about-stats" style={{ y: statsY }}>
                 <div className="about-stat">
                   <div className="about-stat-number">6+</div>
                   <div className="about-stat-label">Projects</div>
@@ -68,7 +66,7 @@ export default function About() {
                 </div>
               </motion.div>
             </div>
-          </ParallaxWrapper>
+          </motion.div>
         </div>
       </div>
     </section>
