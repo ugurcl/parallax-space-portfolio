@@ -10,22 +10,28 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
 
-  const nameY = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const greetingY = useTransform(scrollYProgress, [0, 1], [0, -250]);
+  const greetingX = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const nameY = useTransform(scrollYProgress, [0, 1], [0, -180]);
+  const nameScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
   const titleY = useTransform(scrollYProgress, [0, 1], [0, -100]);
-  const ctaY = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const titleX = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const ctaY = useTransform(scrollYProgress, [0, 1], [0, -40]);
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
   const orb1Y = useTransform(scrollYProgress, [0, 1], [0, -200]);
+  const orb1X = useTransform(scrollYProgress, [0, 1], [0, -150]);
   const orb2Y = useTransform(scrollYProgress, [0, 1], [0, -120]);
+  const orb2X = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
   return (
     <section className="hero" ref={ref}>
-      <motion.div className="hero-floating-element hero-orb-1" style={{ y: orb1Y }} />
-      <motion.div className="hero-floating-element hero-orb-2" style={{ y: orb2Y }} />
+      <motion.div className="hero-floating-element hero-orb-1" style={{ y: orb1Y, x: orb1X }} />
+      <motion.div className="hero-floating-element hero-orb-2" style={{ y: orb2Y, x: orb2X }} />
 
       <motion.div className="hero-content" style={{ opacity }}>
         <motion.p
           className="hero-greeting"
-          style={{ y: nameY }}
+          style={{ y: greetingY, x: greetingX }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
@@ -35,7 +41,7 @@ export default function Hero() {
 
         <motion.h1
           className="hero-name"
-          style={{ y: nameY }}
+          style={{ y: nameY, scale: nameScale }}
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
@@ -45,7 +51,7 @@ export default function Hero() {
 
         <motion.p
           className="hero-title"
-          style={{ y: titleY }}
+          style={{ y: titleY, x: titleX }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
