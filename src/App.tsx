@@ -1,5 +1,6 @@
 import StarField from "./components/StarField";
 import ScrollProgress from "./components/ScrollProgress";
+import MouseGlow from "./components/MouseGlow";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -12,6 +13,7 @@ export default function App() {
     <>
       <StarField />
       <ScrollProgress />
+      <MouseGlow />
       <Navbar />
       <Hero />
       <About />
