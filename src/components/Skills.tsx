@@ -3,6 +3,14 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { skills } from "../data";
 import "../styles/skills.css";
 
+const categoryIcons: Record<string, string> = {
+  language: "\u{1F4DD}",
+  frontend: "\u{1F3A8}",
+  backend: "\u{2699}\u{FE0F}",
+  database: "\u{1F4BE}",
+  devops: "\u{1F680}",
+};
+
 export default function Skills() {
   const sectionRef = useRef(null);
 
@@ -60,6 +68,7 @@ function SkillCard({
 
   return (
     <motion.div className="skill-card" style={{ x, y, opacity }}>
+      <span className="skill-icon">{categoryIcons[skill.category] || "\u{1F4A1}"}</span>
       <div className="skill-name">{skill.name}</div>
       <div className="skill-bar-track">
         <motion.div
