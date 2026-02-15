@@ -1,7 +1,18 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useInView, useSpring } from "framer-motion";
 import { aboutText } from "../data";
 import "../styles/about.css";
+
+function AnimatedNumber({ value, suffix = "" }: { value: number; suffix?: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const spring = useSpring(0, { duration: 2000, bounce: 0 });
+  const display = useTransform(spring, (v) => `${Math.round(v)}${suffix}`);
+
+  if (isInView) spring.set(value);
+
+  return <motion.span ref={ref}>{display}</motion.span>;
+}
 
 export default function About() {
   const sectionRef = useRef(null);
@@ -21,6 +32,7 @@ export default function About() {
   const rightOpacity = useTransform(scrollYProgress, [0.05, 0.3, 0.7, 0.95], [0, 1, 1, 0]);
 
   const orbitRotate = useTransform(scrollYProgress, [0, 1], [0, 180]);
+  const outerOrbitRotate = useTransform(scrollYProgress, [0, 1], [0, -120]);
   const statsY = useTransform(scrollYProgress, [0.1, 0.35, 0.65, 0.9], [40, 0, 0, 40]);
 
   return (
@@ -34,13 +46,18 @@ export default function About() {
         <div className="about-grid">
           <motion.div style={{ x: leftX, opacity: leftOpacity }}>
             <div className="about-visual">
-              <motion.div className="about-orbit" style={{ rotate: orbitRotate }}>
-                <div className="about-orbit-dot" />
-                <div className="about-orbit-dot" />
-                <div className="about-orbit-dot" />
-                <div className="about-orbit-inner">
-                  <div className="about-orbit-core" />
-                </div>
+              <motion.div className="about-orbit-outer" style={{ rotate: outerOrbitRotate }}>
+                <div className="about-orbit-particle" />
+                <div className="about-orbit-particle" />
+                <div className="about-orbit-particle" />
+                <motion.div className="about-orbit" style={{ rotate: orbitRotate }}>
+                  <div className="about-orbit-dot" />
+                  <div className="about-orbit-dot" />
+                  <div className="about-orbit-dot" />
+                  <div className="about-orbit-inner">
+                    <div className="about-orbit-core" />
+                  </div>
+                </motion.div>
               </motion.div>
             </div>
           </motion.div>
@@ -53,15 +70,21 @@ export default function About() {
 
               <motion.div className="about-stats" style={{ y: statsY }}>
                 <div className="about-stat">
-                  <div className="about-stat-number">6+</div>
+                  <div className="about-stat-number">
+                    <AnimatedNumber value={6} suffix="+" />
+                  </div>
                   <div className="about-stat-label">Projects</div>
                 </div>
                 <div className="about-stat">
-                  <div className="about-stat-number">2+</div>
+                  <div className="about-stat-number">
+                    <AnimatedNumber value={2} suffix="+" />
+                  </div>
                   <div className="about-stat-label">Years Exp</div>
                 </div>
                 <div className="about-stat">
-                  <div className="about-stat-number">12+</div>
+                  <div className="about-stat-number">
+                    <AnimatedNumber value={12} suffix="+" />
+                  </div>
                   <div className="about-stat-label">Technologies</div>
                 </div>
               </motion.div>
