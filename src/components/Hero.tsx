@@ -23,10 +23,46 @@ export default function Hero() {
   const orb2Y = useTransform(scrollYProgress, [0, 1], [0, -120]);
   const orb2X = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
+  // Geometric shapes parallax
+  const ringRotate = useTransform(scrollYProgress, [0, 1], [0, 180]);
+  const ringY = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const squareRotate = useTransform(scrollYProgress, [0, 1], [0, -90]);
+  const squareY = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const triangleY = useTransform(scrollYProgress, [0, 1], [0, -140]);
+  const dotsY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const crossY = useTransform(scrollYProgress, [0, 1], [0, -110]);
+  const crossRotate = useTransform(scrollYProgress, [0, 1], [0, 120]);
+
   return (
     <section className="hero" ref={ref}>
       <motion.div className="hero-floating-element hero-orb-1" style={{ y: orb1Y, x: orb1X }} />
       <motion.div className="hero-floating-element hero-orb-2" style={{ y: orb2Y, x: orb2X }} />
+
+      {/* Floating geometric shapes */}
+      <motion.div
+        className="hero-shape hero-shape-ring"
+        style={{ y: ringY, rotate: ringRotate }}
+      />
+      <motion.div
+        className="hero-shape hero-shape-square"
+        style={{ y: squareY, rotate: squareRotate }}
+      />
+      <motion.div
+        className="hero-shape hero-shape-triangle"
+        style={{ y: triangleY }}
+      />
+      <motion.div
+        className="hero-shape hero-shape-dots"
+        style={{ y: dotsY }}
+      >
+        {Array.from({ length: 9 }).map((_, i) => (
+          <span key={i} />
+        ))}
+      </motion.div>
+      <motion.div
+        className="hero-shape hero-shape-cross"
+        style={{ y: crossY, rotate: crossRotate }}
+      />
 
       <motion.div className="hero-content" style={{ opacity }}>
         <motion.p
