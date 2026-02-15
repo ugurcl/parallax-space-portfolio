@@ -73,11 +73,23 @@
 }
 
 .skill-icon {
-  font-size: 1.5rem;
-  margin-bottom: 0.6rem;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 0.8rem;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.12));
+  color: var(--accent-light);
   position: relative;
   z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.skill-card:hover .skill-icon {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
 }
 
 .skill-name {
